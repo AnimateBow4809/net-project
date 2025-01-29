@@ -1,0 +1,142 @@
+#!/usr/bin/env node
+
+/**
+ * Module dependencies.
+ */
+
+const app = require('../app');
+const debug = require('debug')('net-backend:server');
+const http = require('http');
+
+/**
+ * Get port from environment and store in Express.
+ */
+
+const port = normalizePort(process.env.PORT || '3000');
+app.set('port', port);
+
+/**
+ * Create HTTP server.
+ */
+
+const server = http.createServer(app);
+
+const { Server } = require("socket.io");
+const io = new Server(server, {
+  cors: {
+    origin: "*", // Allow all origins (change this for security)
+    methods: ["GET", "POST"],
+  },
+});
+
+let waitingUser = null;
+let user1=null;
+let user2=null;
+io.on("connection", (socket) => {
+  console.log("User connected:", socket.id);
+
+  if (waitingUser) {
+    // Pair the users
+    io.to(waitingUser).emit("matched", { peerId: socket.id });
+    io.to(socket.id).emit("matched", { peerId: waitingUser });
+    user1=waitingUser;
+    user2=socket.id
+    waitingUser = null; // Reset waiting user
+  } else {
+    waitingUser = socket.id; // Store first user in queue
+  }
+
+  // Handle WebRTC signaling
+  socket.on("offer", (data) => {
+    io.to(data.peerId).emit("offer", { sdp: data.sdp, sender: socket.id });
+  });
+
+  socket.on("answer", (data) => {
+    io.to(data.peerId).emit("answer", { sdp: data.sdp, sender: socket.id });
+  });
+
+  socket.on("ice-candidate", (data) => {
+    io.to(data.peerId).emit("ice-candidate", { candidate: data.candidate });
+  });
+
+  socket.on("disconnect", () => {
+    console.log("User disconnected:", socket.id);
+    console.log(user2)
+    console.log(user1)
+    if (user1 === socket.id) {
+      io.to(user2).emit("user-disconnected")
+    }else {
+      io.to(user1).emit("user-disconnected")
+    }
+  });
+});
+
+
+
+/**
+ * Listen on provided port, on all network interfaces.
+ */
+
+server.listen(port);
+server.on('error', onError);
+server.on('listening', onListening);
+
+/**
+ * Normalize a port into a number, string, or false.
+ */
+
+function normalizePort(val) {
+  var port = parseInt(val, 10);
+
+  if (isNaN(port)) {
+    // named pipe
+    return val;
+  }
+
+  if (port >= 0) {
+    // port number
+    return port;
+  }
+
+  return false;
+}
+
+/**
+ * Event listener for HTTP server "error" event.
+ */
+
+function onError(error) {
+  if (error.syscall !== 'listen') {
+    throw error;
+  }
+
+  var bind = typeof port === 'string'
+    ? 'Pipe ' + port
+    : 'Port ' + port;
+
+  // handle specific listen errors with friendly messages
+  switch (error.code) {
+    case 'EACCES':
+      console.error(bind + ' requires elevated privileges');
+      process.exit(1);
+      break;
+    case 'EADDRINUSE':
+      console.error(bind + ' is already in use');
+      process.exit(1);
+      break;
+    default:
+      throw error;
+  }
+}
+
+/**
+ * Event listener for HTTP server "listening" event.
+ */
+
+function onListening() {
+  var addr = server.address();
+  var bind = typeof addr === 'string'
+    ? 'pipe ' + addr
+    : 'port ' + addr.port;
+  debug('Listening on ' + bind);
+}
