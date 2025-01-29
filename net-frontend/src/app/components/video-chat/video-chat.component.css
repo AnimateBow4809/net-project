@@ -1,0 +1,12 @@
+.remote-videos-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.remote-videos-container video {
+  width: 300px;
+  height: auto;
+  border: 1px solid #ccc;
+}
