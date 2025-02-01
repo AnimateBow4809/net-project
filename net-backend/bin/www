@@ -76,7 +76,13 @@ io.on("connection", async (socket) => {
       await User.deleteOne({ socketId: socket.id });
     }
   });
+  socket.on("message",async(data)=>{
+    io.to(data.reciver).emit("message", data);
+    console.log(data)
+  })
 });
+
+
 /**
  * Listen on provided port, on all network interfaces.
  */
