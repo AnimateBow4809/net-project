@@ -9,6 +9,7 @@ import { ChatboxComponent } from './components/chatbox/chatbox.component';
 import { ChatServiceService } from './services/chat-service.service';
 import { ChatMessageComponent } from './components/chat-message/chat-message.component';
 import { FormsModule } from '@angular/forms';
+import {NgOptimizedImage} from "@angular/common";
 
 @NgModule({
   declarations: [
@@ -17,11 +18,12 @@ import { FormsModule } from '@angular/forms';
     ChatboxComponent,
     ChatMessageComponent
   ],
-  imports: [
-    BrowserModule,
-    AppRoutingModule,
-    FormsModule
-  ],
+    imports: [
+        BrowserModule,
+        AppRoutingModule,
+        FormsModule,
+        NgOptimizedImage
+    ],
   providers: [WebrtcService,ChatServiceService],
   bootstrap: [AppComponent]
 })

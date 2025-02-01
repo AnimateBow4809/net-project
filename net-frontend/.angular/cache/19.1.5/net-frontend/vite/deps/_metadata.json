@@ -1,49 +1,49 @@
 {
-  "hash": "389d622f",
+  "hash": "e890d96c",
   "configHash": "70eb560e",
-  "lockfileHash": "02152bc0",
-  "browserHash": "ccbc7440",
+  "lockfileHash": "5c606161",
+  "browserHash": "0b99c012",
   "optimized": {
     "@angular/common": {
       "src": "../../../../../../node_modules/@angular/common/fesm2022/common.mjs",
       "file": "@angular_common.js",
-      "fileHash": "8906c4d3",
+      "fileHash": "e55ceae3",
       "needsInterop": false
     },
     "@angular/core": {
       "src": "../../../../../../node_modules/@angular/core/fesm2022/core.mjs",
       "file": "@angular_core.js",
-      "fileHash": "265475af",
+      "fileHash": "62f45e95",
       "needsInterop": false
     },
     "@angular/forms": {
       "src": "../../../../../../node_modules/@angular/forms/fesm2022/forms.mjs",
       "file": "@angular_forms.js",
-      "fileHash": "a79a268f",
+      "fileHash": "2249bb10",
       "needsInterop": false
     },
     "@angular/platform-browser": {
       "src": "../../../../../../node_modules/@angular/platform-browser/fesm2022/platform-browser.mjs",
       "file": "@angular_platform-browser.js",
-      "fileHash": "dd35444e",
+      "fileHash": "cb5d413f",
       "needsInterop": false
     },
     "@angular/router": {
       "src": "../../../../../../node_modules/@angular/router/fesm2022/router.mjs",
       "file": "@angular_router.js",
-      "fileHash": "c11c43c5",
-      "needsInterop": false
-    },
-    "socket.io-client": {
-      "src": "../../../../../../node_modules/socket.io-client/build/esm/index.js",
-      "file": "socket__io-client.js",
-      "fileHash": "a3b7a078",
+      "fileHash": "95d88f48",
       "needsInterop": false
     },
     "rxjs": {
       "src": "../../../../../../node_modules/rxjs/dist/esm5/index.js",
       "file": "rxjs.js",
-      "fileHash": "ec345fb9",
+      "fileHash": "cbfed629",
+      "needsInterop": false
+    },
+    "socket.io-client": {
+      "src": "../../../../../../node_modules/socket.io-client/build/esm/index.js",
+      "file": "socket__io-client.js",
+      "fileHash": "a5b2cb49",
       "needsInterop": false
     }
   },
