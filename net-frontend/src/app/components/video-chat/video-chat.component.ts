@@ -1,4 +1,4 @@
-import { Component, ElementRef, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, ViewChild } from '@angular/core';
 import { WebrtcService } from '../../services/webrtc.service';
 
 @Component({
@@ -8,7 +8,7 @@ import { WebrtcService } from '../../services/webrtc.service';
   templateUrl: './video-chat.component.html',
   styleUrl: './video-chat.component.css'
 })
-export class VideoChatComponent {
+export class VideoChatComponent implements AfterViewInit{
   @ViewChild('localVideo') localVideo!: ElementRef<HTMLVideoElement>;
   @ViewChild('remoteVideo') remoteVideo!: ElementRef<HTMLVideoElement>;
 

@@ -1,0 +1,21 @@
+<div id="chat-container" class="flex flex-col  h-screen bg-[linear-gradient(to_right_bottom,rgba(128,90,214,0.8),rgba(244,114,182,0.8)),url('/assets/download.png')] bg-blend-overlay">
+  <!-- Messages container -->
+  <div id="messages" class="flex-1 overflow-y-auto">
+  <app-chat-message *ngFor="let msg of messages" [message]="msg"
+                    [ngClass]="{
+      'justify-end': msg.sender !== currentPeerId,
+      'justify-start': msg.sender === currentPeerId
+    }" class="flex">
+  </app-chat-message>
+</div>
+
+  <!-- Input area at the bottom -->
+  <div id="input-area" class="flex flex-row p-2">
+    <input
+      [(ngModel)]="newMessage"
+      (keyup.enter)="sendMessage()"
+      placeholder="Type a message..."
+      class="w-full p-2 bg-[#212121] text-white rounded-lg" />
+    <button (click)="sendMessage()" class="w-fit rounded-lg p-2 bg-[#8774e1] text-white">Send</button>
+  </div>
+</div>
