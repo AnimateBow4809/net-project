@@ -1,0 +1,26 @@
+services:
+  frontend:
+    build: ./net-frontend  
+    ports:
+      - "80:80" 
+    depends_on:
+      - backend
+
+  backend:
+    build: ./net-backend  
+    ports:
+      - "3000:3000" 
+    depends_on:
+      - mongo
+
+  mongo:
+    image: mongodb/mongodb-community-server:latest  
+    container_name: mongodb
+    restart: always
+    ports:
+      - "27017:27017" 
+    volumes:
+      - mongo-data:/data/db  
+
+volumes:
+  mongo-data:
