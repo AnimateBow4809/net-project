@@ -72,11 +72,15 @@ io.on("connection", async (socket) => {
       if (user.pairedWith) {
         io.to(user.pairedWith).emit("user-disconnected");
         await User.findOneAndUpdate({ socketId: user.pairedWith }, { pairedWith: null });
+
+        // Try to find a new pair for the remaining user
+        findNewPair({ id: user.pairedWith });
       }
       await User.deleteOne({ socketId: socket.id });
     }
   });
-  socket.on("message",async(data)=>{
+
+  socket.on("message", async (data) => {
     io.to(data.reciver).emit("message", data);
     console.log(data)
   })
@@ -149,4 +153,21 @@ function onListening() {
     ? 'pipe ' + addr
     : 'port ' + addr.port;
   debug('Listening on ' + bind);
+}
+
+async function findNewPair(socket) {
+  const waitingUser = await User.findOne({ pairedWith: null, socketId: { $ne: socket.id } });
+
+  if (waitingUser) {
+    await User.findByIdAndUpdate(waitingUser._id, { pairedWith: socket.id });
+    await User.findOneAndUpdate({ socketId: socket.id }, { pairedWith: waitingUser.socketId });
+
+    io.to(waitingUser.socketId).emit("matched", { peerId: socket.id });
+    io.to(socket.id).emit("matched", { peerId: waitingUser.socketId });
+
+    console.log(`User ${socket.id} paired with ${waitingUser.socketId}`);
+  } else {
+    await User.findOneAndUpdate({ socketId: socket.id }, { pairedWith: null });
+    console.log(`User ${socket.id} is waiting for a new partner.`);
+  }
 }
