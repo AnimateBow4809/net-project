@@ -9,6 +9,7 @@ const debug = require('debug')('net-backend:server');
 const http = require('http');
 const mongoose = require('mongoose');
 const User = require('../models/user');
+const Message = require('../models/message');
 
 /**
  * Get port from environment and store in Express.
@@ -81,9 +82,29 @@ io.on("connection", async (socket) => {
   });
 
   socket.on("message", async (data) => {
-    io.to(data.reciver).emit("message", data);
-    console.log(data)
-  })
+    try {
+        if (!data.messageData || typeof data.messageData !== "string" || data.messageData.trim() === "") {
+            console.warn("Received message without content. Ignoring.");
+            console.log("Received message:", data);
+            return;
+        }
+        const message = new Message({
+            reciverSocketId: data.reciver,
+            senderSocketId: socket.id,
+            date: new Date(),
+            content: data.messageData
+        });
+
+        await message.save();
+
+        io.to(data.reciver).emit("message", data);
+        
+        console.log("Message stored:", data);
+    } catch (error) {
+        console.error("Error saving message:", error);
+    }
+});
+
 });
 
 
